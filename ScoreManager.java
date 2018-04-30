@@ -1,4 +1,4 @@
-package gametest2;
+
 import java.util.*;
 import java.io.*;
 
@@ -11,7 +11,7 @@ public ArrayList<Score> getScores(){
     Collections.sort(scores,sc);
     return scores;
 }
-    
+
     public void addScore(Score s){
     loadScoresList();
     scores.add(s);
@@ -24,7 +24,7 @@ public void loadScoresList(){
         scores = (ArrayList<Score>) in.readObject();
         in.close();
         filein.close();
-        
+
     }
     catch(IOException i){
         i.printStackTrace();
@@ -59,7 +59,7 @@ public String getHighestScore() {
             x = max;
         }
         while (i < x) {
-            highest += (i + 1) + ".\t" + scores.get(i).getName() + "\t\t" 
+            highest += (i + 1) + ".\t" + scores.get(i).getName() + "\t\t"
                     + scores.get(i).getScore() + "\n";
             i++;
         }

@@ -1,9 +1,9 @@
-package gametest2;
+
 
 import java.io.*;
 import java.util.*;
 
-public class GameTest2 {
+public class ScoreList {
 
     public static void main(String[] args) {
         ScoreManager hm = new ScoreManager();

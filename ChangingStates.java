@@ -1,4 +1,3 @@
-package gametest3;
 
 import java.awt.*;
 import javax.swing.*;
@@ -13,7 +12,8 @@ enum STATE {
 //In the draw/paint/render methods, add the same "if" condition but change
 //the "state.GAME" to "state.MENU", in order to draw the main menu not the game itself
 
-public class GameTest3 {
+public class ChangingStates {
+    gamepnl gamepnl2 = new gamepnl();
 
     public static void main(String[] args) {
         Testframe f = new Testframe();
@@ -21,14 +21,23 @@ public class GameTest3 {
     }
 
 }
-class PlayingArea extends JPanel{
+class PlayingArea extends gamepnl{
     public Rectangle playbutton = new Rectangle(250,150,100,50);
     public Rectangle quitbutton = new Rectangle(250,250,100,50);
 
+    int posx;
+    final int posy = 270;
+
+    shape p = new player(15,15,posx,posy,Color.ORANGE);
+    shape o = new player(15,50,posx+100,posy,Color.WHITE);
+    public PlayingArea(){
+        this.addShape(p);
+        this.addShape(o);
+    }
     public void paint(Graphics g){
         STATE state = Testframe.getGamestate();
+        this.setBackground(Color.BLACK);
         if(state==STATE.MENU){
-        super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
         Font f1 = new Font("arial",Font.BOLD,50); //create font of game title "Arkanoid"
         g.setFont(f1);
@@ -42,36 +51,55 @@ class PlayingArea extends JPanel{
         g2d.draw(quitbutton);}
         else if(state==STATE.GAME){
             super.paint(g);
+            for (int i = 0 ; i<shapes.size() ; i++){
+                shape s = (shape)shapes.get(i);
+                g.setColor(s.c);
+                s.paint(g);
+            }
+            this.addKeyListener(new KeyAdapter(){
+                public void keyPressed(KeyEvent evt){
+//                    shape s = (shape) this.shapes.get(0);
+                    if(evt.getKeyCode()==KeyEvent.VK_RIGHT){
+                        p.posx+=10;
+                    }
+                    else if(evt.getKeyCode()==KeyEvent.VK_LEFT){
+                        p.posx-=10;
+                    }
+                }
+            });
+
+            Timer timer = new javax.swing.Timer(100,new ActionListener(){
+                public void actionPerformed(ActionEvent evt){
+                    repaint();
+                }
+            });
+            timer.start();
         }
+
     }
 }
-class Testframe extends JFrame{
-        static STATE gamestate = STATE.MENU;
-        PlayingArea area= new PlayingArea();
-    
-    public Testframe(){
-        setBounds(100,100,600,400);
+class Testframe extends JFrame {
+    static STATE gamestate = STATE.MENU;
+    PlayingArea area = new PlayingArea();
+    Timer timer;
+
+    public Testframe() {
+        setBounds(100, 100, 600, 400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Arkanoid v 1.0");
         setResizable(false);
-        area.setBackground(Color.blue);
+        area.setBackground(Color.black);
         Container c = getContentPane();
         c.add(area);
-        area.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-            int x= e.getX();
-            int y= e.getY();
-                if(x>=250 && x<=350){
-                    if(y<=200 && y>=150)
-                    gamestate=STATE.GAME;
-                    area.repaint();
-                }
-            }
-        });
+
+    }
+
+    // add the functionality of the game here
+
+
         //area.removeMouseListener(new MouseAdapter() {});
-    }        
     public static STATE getGamestate() {
         return gamestate;
     }
 }
+

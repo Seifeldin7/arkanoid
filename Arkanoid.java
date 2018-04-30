@@ -1,5 +1,5 @@
 
-package arkanoid;
+
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
@@ -59,7 +59,7 @@ class ptpanel extends JPanel {
         this.x=x;
         this.y=y;
         this.recx=recx;
-       this.c=c;
+        this.c=c;
     }
     public void addShape(Shape s) {
         if (s != null) {
@@ -84,10 +84,12 @@ class ptpanel extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         g.setColor(Color.black);
-        g.fillRect(recx,800, 200, 30);
+        g.fillRect(recx,700, 200, 30);
         c.paint(g);
         for (int i = 0; i < shapes.size(); i++) {
-            ((Shape) (shapes.get(i))).paint(g);
+            Shape xx = ((Shape) (shapes.get(i)));
+            g.setColor(xx.c);
+            xx.paint(g);
         }
     }
     public void setx(int x){
@@ -107,6 +109,7 @@ class ptpanel extends JPanel {
     }
     
 }
+
 public class Arkanoid extends JFrame{
     private Shape[] row1=new Shape[40];
     private Shape[] row2=new Shape[120];
@@ -122,17 +125,17 @@ public class Arkanoid extends JFrame{
         draw.setBackground(Color.BLUE);
         Score.setForeground(Color.yellow);
         draw.setLayout(null);
-        Score.setBounds(1000,900,120,20);
+        Score.setBounds(1000,100,120,20);
         draw.add(Score);
         this.setBounds(100,100,1200,1000);
         this.add(draw);
         for (int i = 0; i < 40; i++) {
             if(i%2==0){
             row1[i]=new Rec(30,30,Color.GREEN,i*30,0);
-            row2[i]=new circ(30,30,Color.red,i*30,60); 
+            //row2[i]=new circ(30,30,Color.red,i*30,60);
             }
             else{
-               row1[i]=new circ(30,30,Color.GREEN,i*30,0); 
+               //row1[i]=new circ(30,30,Color.GREEN,i*30,0);
                row2[i]=new Rec(30,30,Color.red,i*30,60);
             }
         }
