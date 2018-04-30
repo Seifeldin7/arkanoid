@@ -69,7 +69,6 @@ public class level1 extends JFrame {
 
     public static void main(String[] args) {
         level1 l = new level1();
-        STATE state = Testframe.getGamestate();
         l.setVisible(true);
     }
 }
