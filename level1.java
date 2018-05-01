@@ -13,17 +13,18 @@ public class level1 extends JFrame {
     JButton stop = new JButton("Stop");
     Timer timer;
     ImageIcon first = new ImageIcon("/Users/peternabil/Desktop/Peter/College/College Material/SPRING'18/arkanoid/first.png");
-    int posy = 10;
+    ImageIcon enemy = new ImageIcon("/Users/peternabil/Desktop/Peter/College/College Material/SPRING'18/arkanoid/fourth.png");
+
+    int posy = 300;
     final int posx = 15;
     images spaceship1 = new images(first,posx,posy);
+    images enemy1 = new images(enemy,posx+800,posy);
     shape fire;
     public level1(){
         this.setBounds(400,200,800,600);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        fire = new shoot(10,10,posx+90,posy+100,Color.ORANGE);
         gamepnl1.shapes.add(spaceship1);
-        gamepnl1.repaint();
-        gamepnl1.fires.add(fire);
+        gamepnl1.shapes.add(enemy1);
         this.setResizable(false);
 //        start.addActionListener(new ActionListener() {
 //            @Override
@@ -39,7 +40,15 @@ public class level1 extends JFrame {
         bigpnl.add(gamepnl1,BorderLayout.CENTER);
         bigpnl.add(scorepnl,BorderLayout.SOUTH);
         this.add(bigpnl);
-        gamepnl1.setFocusable(true);
+//        start.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                gamepnl1.shapes.add(enemy1);
+//                gamepnl1.repaint();
+//            }
+//        });
+
+
         gamepnl1.addKeyListener(new KeyAdapter(){
             public void keyPressed(KeyEvent evt){
                 if(evt.getKeyCode()==KeyEvent.VK_UP ){
@@ -48,15 +57,16 @@ public class level1 extends JFrame {
                 else if(evt.getKeyCode()==KeyEvent.VK_DOWN ){
                     spaceship1.posy+=10;
                 }
-//                else if (evt.getKeyCode()==KeyEvent.VK_SPACE){
-//                    for (int i = 0 ; i < 800 ; i++){
-//                        fire.posx+=10;
-//                        gamepnl1.repaint();
-//                    }
-//                }
+                else if (evt.getKeyCode()==KeyEvent.VK_SPACE) {
+                    for (int i = 0; i < 800; i+=120) {
+                        bullet b1 = new bullet(10, 10,posx+i+70,spaceship1.posy+38 ,Color.green,200);
+                        gamepnl1.fires.add(b1);
+                    }
+                    gamepnl1.shoot();
+                }
             }
         });
-
+        gamepnl1.setFocusable(true);
         timer = new javax.swing.Timer(100,new ActionListener(){
             public void actionPerformed(ActionEvent evt){
                 gamepnl1.repaint();
@@ -95,15 +105,6 @@ class player extends shape{
       g.fillRect(posx,posy,width,hight);
     }
 }
-class shoot extends shape{
-    public shoot(int width,int hight,int posx,int posy,Color c){super(width,hight,posx,posy,c);}
-    @Override
-    public void paint(Graphics g) {
-        g.setColor(c);
-        g.fillOval(posx,posy,width,hight);
-    }
-    public void shootfire(){ posx+=10; }
-}
 class enemy extends shape{
     public enemy(int width,int hight,int posx,int posy,Color c){super(width,hight,posx,posy,c);}
     @Override
@@ -123,6 +124,7 @@ class gamepnl extends JPanel{
     }
     ArrayList shapes = new ArrayList();
     ArrayList fires = new ArrayList();
+    boolean fire = false;
     public void addShape(shape s) {
         if (s != null) {
             shapes.add(s);
@@ -143,10 +145,17 @@ class gamepnl extends JPanel{
             images s = (images)shapes.get(i);
             s.paint(g);
         }
-        for (int j = 0 ; j<shapes.size() ; j++){
-            shape s = (shape) fires.get(j);
-            s.paint(g);
+        if (fire){
+            for (int j = 1 ; j<fires.size();j++){
+                bullet b = (bullet)fires.get(j);
+                b.paint(g);
+                fires.remove(j);
+            }
         }
+    }
+    public void shoot(){
+        fire = true;
+        this.repaint();
     }
 }
 
@@ -158,5 +167,19 @@ class images{
     }
     public void paint(Graphics g) {
         g.drawImage(i.getImage(),posx,posy,null);
+    }
+}
+
+class bullet extends shape {
+    public double speed;
+    public bullet(int width, int hight, int posx, int posy, Color c, double speed) {
+        super(width, hight, posx, posy, c);
+        this.speed = speed;
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        g.setColor(c);
+        g.fillOval(posx,posy,width,hight);
     }
 }
